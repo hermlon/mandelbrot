@@ -27,7 +27,7 @@ def draw_mandelbrot(x_pos, y_pos, zoom):
 
 pygame.init()
 
-size = width, height = 1000, 1000
+size = width, height = 400, 300
 screen = pygame.display.set_mode(size)
 
 screen.fill((255, 255, 255))
