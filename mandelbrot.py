@@ -5,9 +5,6 @@ def draw_mandelbrot(x_pos, y_pos, zoom):
     max_iterations = 50
     for x in range(width):
         for y in range(height):
-            # c = a + bi
-            #a = (x / width * 4 - 2 + x_pos) / zoom
-            #b = (y / height * 4 - 2 + y_pos) / zoom
             a = (x / width + x_pos) / zoom
             b = (y / height + y_pos) / zoom
             iterations = 0
@@ -17,7 +14,6 @@ def draw_mandelbrot(x_pos, y_pos, zoom):
                 iterations += 1
                 f_a, f_b = f_a**2 - f_b**2 + a, 2*f_a*f_b + b
                 last_length = math.sqrt(f_a**2 + f_b**2)
-                #print(last_length)
             if last_length > 2:
                 # farbig
                 color = (0, 0, iterations / max_iterations * 255)
@@ -67,7 +63,6 @@ while running:
             y = zoom * (pos[1]/height + y)/oldzoom - pos[1]/height
 
             draw_mandelbrot(x, y, zoom)
-            screen.set_at((width//2, height//2), (255, 255, 255))
             pygame.display.update()
         if event.type == pygame.QUIT:
             running = False
