@@ -6,8 +6,10 @@ def draw_mandelbrot(x_pos, y_pos, zoom):
     for x in range(width):
         for y in range(height):
             # c = a + bi
-            a = (x / width * 4 - 2 + x_pos) / zoom
-            b = (y / height * 4 - 2 + y_pos) / zoom
+            #a = (x / width * 4 - 2 + x_pos) / zoom
+            #b = (y / height * 4 - 2 + y_pos) / zoom
+            a = (x / width + x_pos) / zoom
+            b = (y / height + y_pos) / zoom
             iterations = 0
             last_length = 3
             f_a, f_b = 0, 0
@@ -34,22 +36,38 @@ screen.fill((255, 255, 255))
 
 running = True
 
-x = 0
-y = 0
-zoom = 1
+x = -0.5
+y = -0.5
+zoom = 0.25
 draw_mandelbrot(x, y, zoom)
+pygame.display.update()
 while running:
-    print("Bitte Brot aus dem Ofen entnehmen!")
-    pygame.display.update()
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
+            oldzoom = zoom
             if event.button == 1:
                 zoom *= 1.2
-            if event.button == 3:
+            elif event.button == 3:
                 zoom *= 0.8
+            else:
+                # other mouse buttons
+                break
+
             pos = pygame.mouse.get_pos()
-            x = (width / 2 - pos[0]) * 4 / width
-            y = (height / 2 - pos[1]) * 4 / height
-            draw_mandelbrot(-x, -y, zoom)
+
+            # translates function so that the point where the user clicked
+            # is in the center of the viewport
+            x = x + (pos[0] - width / 2) / width
+            y = y + (pos[1] - height / 2)  / height
+
+            # adjusts the translation so that the point where the user clicked
+            # is still at the same position (the center) although we use another
+            # zoom factor
+            x = zoom * (pos[0]/width + x)/oldzoom - pos[0]/width
+            y = zoom * (pos[1]/height + y)/oldzoom - pos[1]/height
+
+            draw_mandelbrot(x, y, zoom)
+            screen.set_at((width//2, height//2), (255, 255, 255))
+            pygame.display.update()
         if event.type == pygame.QUIT:
             running = False
